@@ -462,6 +462,7 @@ defmodule Phoenix.LiveView.HTMLEngine do
   end
 
   defp handle_tag_attrs(state, meta, attrs) do
+    #IO.inspect(attrs, label: :handle_tag_attrs)
     Enum.reduce(attrs, state, fn
       {:root, {:expr, value, %{line: line, column: col}}}, state ->
         attrs = Code.string_to_quoted!(value, line: line, column: col, file: state.file)
