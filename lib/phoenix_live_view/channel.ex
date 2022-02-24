@@ -842,7 +842,7 @@ defmodule Phoenix.LiveView.Channel do
 
         case connect_info do
           %{session: nil} ->
-            Logger.debug("""
+            Logger.info("""
             LiveView session was misconfigured or the user token is outdated.
 
             1) Ensure your session configuration in your endpoint is in a module attribute:
@@ -896,13 +896,15 @@ defmodule Phoenix.LiveView.Channel do
                 GenServer.reply(from, {:error, %{reason: "unauthorized"}})
                 {:stop, :shutdown, :no_state}
 
-              {:error, _reason} ->
+              {:error, reason} ->
+                Logger.info(["Unknown Session issue: ", inspect(reason)])
                 GenServer.reply(from, {:error, %{reason: "stale"}})
                 {:stop, :shutdown, :no_state}
             end
         end
 
-      {:error, _reason} ->
+      {:error, reason} ->
+        Logger.info(["Session verification failed: ", inspect(reason)])
         GenServer.reply(from, {:error, %{reason: "stale"}})
         {:stop, :shutdown, :no_state}
     end
